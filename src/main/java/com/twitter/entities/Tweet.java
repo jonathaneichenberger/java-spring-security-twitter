@@ -2,6 +2,7 @@ package com.twitter.entities;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
 
@@ -14,6 +15,8 @@ public class Tweet {
     @Column(name = "tweet_id")
     private Long tweetId;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
     private String content;
