@@ -1,4 +1,4 @@
-package com.twitter.java_spring_security_twitter;
+package com.twitter;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
