@@ -17,6 +17,8 @@ public class User {
 
     private String password;
 
+    private Set<Role> roles;
+
     public UUID getUserId() {
         return userId;
     }
