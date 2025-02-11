@@ -2,7 +2,6 @@ package com.twitter.entities;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
 
