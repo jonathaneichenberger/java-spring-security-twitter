@@ -23,15 +23,15 @@ import java.util.Set;
 public class UserController {
 
     private final UserRepository userRepository;
-
     private final RoleRepository roleRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
-    public UserController(UserRepository userRepository, RoleRepository roleRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public UserController(UserRepository userRepository,
+                          RoleRepository roleRepository,
+                          BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
@@ -41,13 +41,13 @@ public class UserController {
         var basicRole = roleRepository.findByName(Role.Values.BASIC.name());
 
         var userFromDb = userRepository.findByUsername(dto.username());
-        if ( userFromDb.isPresent()) {
+        if (userFromDb.isPresent()) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY);
         }
 
         var user = new User();
         user.setUsername(dto.username());
-        user.setPassword(bCryptPasswordEncoder.encode(dto.password()));
+        user.setPassword(passwordEncoder.encode(dto.password()));
         user.setRoles(Set.of(basicRole));
 
         userRepository.save(user);
@@ -58,8 +58,7 @@ public class UserController {
     @GetMapping("/users")
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<List<User>> listUsers() {
-       var users =  userRepository.findAll();
-
-       return ResponseEntity.ok(users);
+        var users = userRepository.findAll();
+        return ResponseEntity.ok(users);
     }
 }

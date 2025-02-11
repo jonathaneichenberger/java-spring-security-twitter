@@ -18,7 +18,7 @@ public class AdminUserConfig implements CommandLineRunner {
     private RoleRepository roleRepository;
 
     private UserRepository userRepository;
-    
+
     private BCryptPasswordEncoder passwordEncoder;
 
     public AdminUserConfig(RoleRepository roleRepository,

@@ -21,15 +21,15 @@ import java.util.stream.Collectors;
 public class TokenController {
 
     private final JwtEncoder jwtEncoder;
-
     private final UserRepository userRepository;
+    private BCryptPasswordEncoder passwordEncoder;
 
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-
-    public TokenController(JwtEncoder jwtEncoder, UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public TokenController(JwtEncoder jwtEncoder,
+                           UserRepository userRepository,
+                           BCryptPasswordEncoder passwordEncoder) {
         this.jwtEncoder = jwtEncoder;
         this.userRepository = userRepository;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @PostMapping("/login")
@@ -37,7 +37,7 @@ public class TokenController {
 
         var user = userRepository.findByUsername(loginRequest.username());
 
-        if (user.isEmpty() || !user.get().isLoginCorrect(loginRequest, bCryptPasswordEncoder)) {
+        if (user.isEmpty() || !user.get().isLoginCorrect(loginRequest, passwordEncoder)) {
             throw new BadCredentialsException("user or password is invalid!");
         }
 
@@ -59,7 +59,6 @@ public class TokenController {
 
         var jwtValue = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
 
-        return ResponseEntity.ok( new LoginResponse(jwtValue, expiresIn));
-
+        return ResponseEntity.ok(new LoginResponse(jwtValue, expiresIn));
     }
 }
